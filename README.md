@@ -1,2 +1,1 @@
-# front
-Frontend part of app
+# Frontend part of the Calendar app 
