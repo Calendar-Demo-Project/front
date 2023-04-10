@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'Aeonik';
+  font-style: normal;
+  font-weight: normal;
+  src: url('../../fonts/Aeonik/AeonikTRIAL-Regular.otf');
+}
+
+.year {
+  display: flex;
+  align-items: center;
+  font-family: 'Aeonik';
+}
+
+.month_name {
+  font-size: 20px;
+  line-height: 30px;
+  color: #333333;
+}
+
+.count_year {
+  font-size: 18px;
+  line-height: 27px;
+  color: #bdbdbb;
+  margin-left: 4px;
+}
+
+.wrapper_slider {
+  max-width: 299px;
+  margin-top: 20px;
+}
+
+.next {
+  position: absolute;
+  top: 0;
+  width: 28px;
+  height: 28px;
+  background-color: red;
+}
