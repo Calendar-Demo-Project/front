@@ -11,8 +11,10 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { changeDate } from '../../features/smallCalendar/smallCalendarSlice';
 import moment from 'moment';
 import { Arrow } from './arrow/Arrow';
+import { useEffect, useState } from 'react';
 
 export const SmallCalendar = () => {
+  const [show, setShow] = useState(true);
   const currentDate = useAppSelector(
     (state) => state.smallCalendar.currentDate
   );
@@ -22,20 +24,21 @@ export const SmallCalendar = () => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 200,
+    speed: 400,
     slidesToShow: 1,
     slidesToScroll: 1,
     swipe: false,
     arrows: true,
     nextArrow: (
       <Arrow
-        func={() =>
+        func={() => {
           dispatch(
             changeDate(
               moment(currentDate).clone().add(1, 'month').toISOString()
             )
-          )
-        }
+          );
+          setShow(false);
+        }}
         url={rigthArrow}
         condition={
           moment(selectDate).format('MM') > moment(currentDate).format('MM')
@@ -54,13 +57,14 @@ export const SmallCalendar = () => {
     ),
     prevArrow: (
       <Arrow
-        func={() =>
+        func={() => {
           dispatch(
             changeDate(
               moment(currentDate).clone().subtract(1, 'month').toISOString()
             )
-          )
-        }
+          );
+          setShow(false);
+        }}
         url={leftArrow}
         condition={
           moment(selectDate).format('MM') < moment(currentDate).format('MM')
@@ -79,6 +83,14 @@ export const SmallCalendar = () => {
     ),
   };
 
+  useEffect(() => {
+    if (!show) {
+      setTimeout(() => {
+        setShow(true);
+      }, 290);
+    }
+  }, [show]);
+
   return (
     <div>
       <div className={style.year}>
@@ -93,11 +105,11 @@ export const SmallCalendar = () => {
         <Slider {...settings}>
           <div>
             <Week />
-            <Month currentDate={moment(currentDate)} />
+            <Month currentDate={moment(currentDate)} show={show} />
           </div>
           <div>
             <Week />
-            <Month currentDate={moment(currentDate)} />
+            <Month currentDate={moment(currentDate)} show={show} />
           </div>
         </Slider>
       </div>
