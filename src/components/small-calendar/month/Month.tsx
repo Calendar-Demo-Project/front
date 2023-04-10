@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
   setListDates,
   clearListDates,
+  chooseStartDate,
 } from '../../../features/smallCalendar/smallCalendarSlice';
 import { Iday } from '../../../types/day';
 import style from './month.module.scss';
@@ -67,6 +68,10 @@ export const Month: React.FC<Props> = ({ currentDate, show }) => {
       }
     }
   }, [currentDate]);
+
+  const initialStartDate = (day: Iday) => {
+    dispatch(chooseStartDate(day.date.toISOString()));
+  };
 
   const handlerMouseDown = (day: Iday) => {
     setStartDay(true);
@@ -176,6 +181,7 @@ export const Month: React.FC<Props> = ({ currentDate, show }) => {
           [style['end-selected']]: checkEndSelectedDay(day) && show,
         })}
         key={day.date.valueOf()}
+        onClick={() => initialStartDate(day)}
         onMouseDown={() => handlerMouseDown(day)}
         onMouseUp={() => handlerOnMouseUp(day)}
         onMouseOver={() => handlerOnMouseOver(day)}
