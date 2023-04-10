@@ -13,9 +13,10 @@ const allCountDays = 35;
 
 type Props = {
   currentDate: moment.Moment;
+  show: boolean;
 };
 
-export const Month: React.FC<Props> = ({ currentDate }) => {
+export const Month: React.FC<Props> = ({ currentDate, show }) => {
   const [days, setDays] = useState<Iday[]>([]);
   const [startDay, setStartDay] = useState(false);
   const dispatch = useAppDispatch();
@@ -121,28 +122,58 @@ export const Month: React.FC<Props> = ({ currentDate }) => {
     }
   };
 
+  const checkSmall = () => {
+    let smallest = listDates[0];
+    listDates.forEach((el) => {
+      if (moment(el).isBefore(smallest)) {
+        smallest = el;
+      }
+    });
+    return smallest;
+  };
+
+  const checkToday = (day: Iday) => {
+    return day.date.format('DD-MM-YYYY') === moment().format('DD-MM-YYYY');
+  };
+
+  const checkStartSelectDate = (day: Iday) => {
+    return (
+      (day.date.toISOString() === listDates[listDates.length - 1] &&
+        day.date.isBefore(moment(listDates[0]))) ||
+      day.date.weekday() === 1 ||
+      (day.date.format('DD') === moment(listDates[0]).format('DD') &&
+        listDates.length === 1) ||
+      (day.date.toISOString() === listDates[0] &&
+        listDates.some((date) => moment(date).isAfter(day.date)))
+    );
+  };
+
+  const checkEndSelectedDay = (day: Iday) => {
+    return (
+      (day.date.toISOString() === listDates[listDates.length - 1] &&
+        day.date.isAfter(moment(listDates[0]))) ||
+      day.date.weekday() === 0 ||
+      listDates.length === 1 ||
+      (day.date.toISOString() === listDates[0] &&
+        listDates.some((date) => moment(date).isBefore(day.date)))
+    );
+  };
+
+  const checkSelectedDay = (day: Iday) => {
+    return listDates.some(
+      (el) => moment(el).format('DD-MM-YYYY') === day.date.format('DD-MM-YYYY')
+    );
+  };
+
   const test = useMemo(() => {
     return days.map((day: Iday) => (
       <div
         className={classNames(style.day, {
           [style['no_current']]: day.type === 'other',
-          [style['today']]:
-            day.date.format('DD-MM-YYYY') === moment().format('DD-MM-YYYY'),
-          [style['several_date']]: listDates.some(
-            (el) =>
-              moment(el).format('DD-MM-YYYY') === day.date.format('DD-MM-YYYY')
-          ),
-          [style['start-selected']]:
-            (day.date.format('DD-MM-YYYY') ===
-              moment(listDates[listDates.length - 1]).format('DD-MM-YYYY') &&
-              day.date.format('DD') <
-                moment(listDates[0]).format('DD-MM-YYYY')) ||
-            day.date.weekday() === 1,
-          [style['end-selected']]:
-            (day.date.format('DD') ===
-              moment(listDates[listDates.length - 1]).format('DD') &&
-              day.date.format('DD') > moment(listDates[0]).format('DD')) ||
-            listDates.length === 1,
+          [style['today']]: checkToday(day) && show,
+          [style['several_date']]: checkSelectedDay(day) && show,
+          [style['start-selected']]: checkStartSelectDate(day) && show,
+          [style['end-selected']]: checkEndSelectedDay(day) && show,
         })}
         key={day.date.valueOf()}
         onMouseDown={() => handlerMouseDown(day)}
