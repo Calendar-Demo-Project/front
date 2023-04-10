@@ -3,7 +3,6 @@ import moment from 'moment';
 import { useEffect, useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import {
-  chooseStartDate,
   setListDates,
   clearListDates,
 } from '../../../features/smallCalendar/smallCalendarSlice';
@@ -67,10 +66,6 @@ export const Month: React.FC<Props> = ({ currentDate }) => {
       }
     }
   }, [currentDate]);
-
-  const initialStartDate = (day: Iday) => {
-    dispatch(chooseStartDate(day.date.toISOString()));
-  };
 
   const handlerMouseDown = (day: Iday) => {
     setStartDay(true);
@@ -138,17 +133,18 @@ export const Month: React.FC<Props> = ({ currentDate }) => {
               moment(el).format('DD-MM-YYYY') === day.date.format('DD-MM-YYYY')
           ),
           [style['start-selected']]:
-            moment(listDates[0]).format('DD-MM-YYYY') ===
-              day.date.format('DD-MM-YYYY') || day.date.weekday() === 1,
+            (day.date.format('DD-MM-YYYY') ===
+              moment(listDates[listDates.length - 1]).format('DD-MM-YYYY') &&
+              day.date.format('DD') <
+                moment(listDates[0]).format('DD-MM-YYYY')) ||
+            day.date.weekday() === 1,
           [style['end-selected']]:
-            day.date.weekday() === 0 ||
-            day.date.format('DD-MM-YYYY') ===
-              moment(listDates[listDates.length - 1]).format('DD-MM-YYYY'),
+            (day.date.format('DD') ===
+              moment(listDates[listDates.length - 1]).format('DD') &&
+              day.date.format('DD') > moment(listDates[0]).format('DD')) ||
+            listDates.length === 1,
         })}
         key={day.date.valueOf()}
-        onClick={() => {
-          initialStartDate(day);
-        }}
         onMouseDown={() => handlerMouseDown(day)}
         onMouseUp={() => handlerOnMouseUp(day)}
         onMouseOver={() => handlerOnMouseOver(day)}
