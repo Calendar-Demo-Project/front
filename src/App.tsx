@@ -1,10 +1,12 @@
 import React from 'react';
-import { SmallCalendar } from './components/small-calendar/SmallCalendar';
+import { Main } from './pages/main/Main';
+
+import style from './app.module.scss';
 
 function App() {
   return (
-    <div>
-      <SmallCalendar />
+    <div className={style.main}>
+      <Main />
     </div>
   );
 }

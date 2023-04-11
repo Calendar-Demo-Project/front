@@ -1,0 +1,12 @@
+.button {
+  display: flex;
+  align-items: center;
+  width: 284px;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+
+  & img {
+    margin-right: 20px;
+  }
+}

@@ -1,0 +1,11 @@
+@import '../../utils/variables';
+
+.wrapper {
+  max-width: calc(333px - 34px);
+  padding: 15px 17px;
+  border: 1px solid $dividers;
+  border-left: 0;
+  grid-column-start: 1;
+  grid-column-end: 1;
+  height: 100vh;
+}

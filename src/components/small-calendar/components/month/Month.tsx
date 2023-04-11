@@ -1,13 +1,16 @@
+import { useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 import moment from 'moment';
-import { useEffect, useMemo, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
 import {
   setListDates,
   clearListDates,
   chooseStartDate,
-} from '../../../features/smallCalendar/smallCalendarSlice';
-import { Iday } from '../../../types/day';
+  changeDate,
+} from '../../../../features/smallCalendar/smallCalendarSlice';
+import { Iday } from '../../../../types/day';
+
 import style from './month.module.scss';
 
 const allCountDays = 35;
@@ -71,6 +74,9 @@ export const Month: React.FC<Props> = ({ currentDate, show }) => {
 
   const initialStartDate = (day: Iday) => {
     dispatch(chooseStartDate(day.date.toISOString()));
+    if (day.date.format('YYYY') !== currentDate.format('YYYY')) {
+      dispatch(changeDate(day.date.toISOString()));
+    }
   };
 
   const handlerMouseDown = (day: Iday) => {
@@ -125,16 +131,6 @@ export const Month: React.FC<Props> = ({ currentDate, show }) => {
         getDaysInRange(moment(listDates[0]), day.date, false);
       }
     }
-  };
-
-  const checkSmall = () => {
-    let smallest = listDates[0];
-    listDates.forEach((el) => {
-      if (moment(el).isBefore(smallest)) {
-        smallest = el;
-      }
-    });
-    return smallest;
   };
 
   const checkToday = (day: Iday) => {
