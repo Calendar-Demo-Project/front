@@ -1,0 +1,35 @@
+@import '../../../../utils/variables';
+@import '../../../../utils/fonts';
+
+.acardion {
+  border-top: 1px solid $dividers;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 284px;
+  font-family: 'Aeonik';
+  cursor: pointer;
+}
+
+.default {
+  transition: all 0.3s ease;
+}
+
+.content {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+.active {
+  height: 256px;
+  transition: height 0.3s ease;
+}
+
+.down {
+  transform: rotate(180deg);
+  transition: all 0.3s ease;
+}

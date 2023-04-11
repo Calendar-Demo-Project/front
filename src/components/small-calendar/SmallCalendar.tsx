@@ -1,17 +1,18 @@
-import { Week } from './week/Week';
-import { Month } from './month/Month';
+import { useEffect, useState } from 'react';
 import Slider from 'react-slick';
+import moment from 'moment';
+import { Week } from './components/week/Week';
+import { Month } from './components/month/Month';
 import rigthArrow from '../../public/images/icons/right-arrow.png';
 import leftArrow from '../../public/images/icons/leftArrow.png';
+import { Arrow } from './components/arrow/Arrow';
+
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { changeDate } from '../../features/smallCalendar/smallCalendarSlice';
 
 import style from './smallCalendar.module.scss';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { changeDate } from '../../features/smallCalendar/smallCalendarSlice';
-import moment from 'moment';
-import { Arrow } from './arrow/Arrow';
-import { useEffect, useState } from 'react';
 
 export const SmallCalendar = () => {
   const [show, setShow] = useState(true);

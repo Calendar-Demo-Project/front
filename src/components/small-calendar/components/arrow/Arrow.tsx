@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppSelector } from '../../../app/hooks';
+import { useAppSelector } from '../../../../app/hooks';
 
 export const Arrow = (props: any) => {
   const { style, onClick, url, func, condition, myStyle } = props;

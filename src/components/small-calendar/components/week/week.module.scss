@@ -1,0 +1,19 @@
+@import '../../../../utils/fonts';
+@import '../../../../utils/variables';
+
+.wrapper {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 270px;
+}
+
+.day {
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  font-family: 'Aeonik';
+  text-transform: uppercase;
+  color: $text;
+  width: 38px;
+  height: 28px;
+}
