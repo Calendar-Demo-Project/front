@@ -34,7 +34,10 @@ export const ElementList: React.FC<Props> = ({ type, text, active, color }) => {
             className={classNames(style.checkbox, {
               [style['active']]: isChecked,
             })}
-            style={{ backgroundColor: `${color}` }}
+            style={{
+              backgroundColor: `${isChecked ? color : 'transparent'}`,
+              border: `2px solid ${!isChecked ? color : 'transparent'}`,
+            }}
             htmlFor={id}
           ></label>
         </>

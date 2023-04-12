@@ -6,4 +6,6 @@ body {
 .main {
   display: grid;
   grid-template-columns: 333px 1fr;
+  max-width: 1940px;
+  margin: 0 auto;
 }

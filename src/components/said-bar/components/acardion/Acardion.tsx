@@ -52,6 +52,7 @@ export const Acardion: React.FC<Props> = ({ title, list }) => {
                 text={el.text}
                 active={isActive(el)}
                 color={el.color}
+                key={Math.random() * (99999 - 1) + 1}
               />
             );
           })}

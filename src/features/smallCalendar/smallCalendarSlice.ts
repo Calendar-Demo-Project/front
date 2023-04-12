@@ -1,16 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import moment from 'moment';
+import { Iday } from '../../types/day';
 
 export interface IsmallCalendar {
   currentDate: string;
   selectDate: string;
   listChooseDates: string[];
+  days: Iday[];
 }
 
 const initialState: IsmallCalendar = {
   currentDate: moment().toISOString(),
   selectDate: '',
   listChooseDates: [],
+  days: [],
 };
 
 export const smallCalendarSlice = createSlice({
@@ -51,6 +54,10 @@ export const smallCalendarSlice = createSlice({
         );
       });
     },
+    setDays: (state, action: PayloadAction<Iday[]>) => {
+      console.log(action);
+      state.days = action.payload;
+    },
   },
 });
 
@@ -61,6 +68,7 @@ export const {
   clearListDates,
   onlyMore,
   onlyLess,
+  setDays,
 } = smallCalendarSlice.actions;
 
 export const smallCalendarReducer = smallCalendarSlice.reducer;
