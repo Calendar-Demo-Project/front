@@ -1,0 +1,9 @@
+@import '../../../../../utils/variables';
+
+.day {
+  text-align: center;
+  width: 154px;
+  height: 182px;
+  border: 1px solid $dividers;
+  padding-top: 16px;
+}
