@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { Header } from '../../components/header/Header';
 import { SaidBar } from '../../components/said-bar/SaidBar';
 import SliderRef from 'react-slick';
+import { MainCalendar } from '../../components/main-calendar/MainCalendar';
 
 export const Main = () => {
   const sliderRef = useRef<SliderRef>(null);
@@ -21,6 +22,7 @@ export const Main = () => {
     <>
       <Header next={nextSlide} prev={prevSlide} />
       <SaidBar MyRef={sliderRef} />
+      <MainCalendar />
     </>
   );
 };

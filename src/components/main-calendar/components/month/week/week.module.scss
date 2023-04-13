@@ -1,0 +1,26 @@
+@import '../../../../../utils/variables';
+@import '../../../../../utils/fonts';
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+
+  & .day_name:nth-child(1) {
+    border-top-left-radius: 14px;
+  }
+
+  & .day_name:last-child {
+    border-top-right-radius: 14px;
+  }
+}
+
+.day_name {
+  font-family: 'Aeonik';
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 58px;
+  font-size: 16px;
+  width: 154px;
+  height: 58px;
+  border: 1px solid $dividers;
+}
