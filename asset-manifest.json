@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/Calendar-Demo-Project/static/css/main.ae0abaec.css",
+    "main.js": "/Calendar-Demo-Project/static/js/main.bfb569c9.js",
+    "static/js/787.a9f6993b.chunk.js": "/Calendar-Demo-Project/static/js/787.a9f6993b.chunk.js",
+    "static/media/AeonikTRIAL-Bold.otf": "/Calendar-Demo-Project/static/media/AeonikTRIAL-Bold.bb271c04181fa945fbbe.otf",
+    "static/media/AeonikTRIAL-Regular.otf": "/Calendar-Demo-Project/static/media/AeonikTRIAL-Regular.f252af9282d8460f6582.otf",
+    "static/media/slick.svg": "/Calendar-Demo-Project/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/Calendar-Demo-Project/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/Calendar-Demo-Project/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/Calendar-Demo-Project/static/media/slick.295183786cd8a1389865.woff",
+    "index.html": "/Calendar-Demo-Project/index.html",
+    "main.ae0abaec.css.map": "/Calendar-Demo-Project/static/css/main.ae0abaec.css.map",
+    "main.bfb569c9.js.map": "/Calendar-Demo-Project/static/js/main.bfb569c9.js.map",
+    "787.a9f6993b.chunk.js.map": "/Calendar-Demo-Project/static/js/787.a9f6993b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ae0abaec.css",
+    "static/js/main.bfb569c9.js"
+  ]
+}
