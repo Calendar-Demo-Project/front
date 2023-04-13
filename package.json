@@ -22,10 +22,11 @@
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4"
   },
+  "homepage": "https://myuser.github.io/Calendar-Demo-Project",
   "scripts": {
     "start": "react-scripts start",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -b build",
+    "deploy": "gh-pages -b master -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
