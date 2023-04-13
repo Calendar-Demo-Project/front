@@ -4,6 +4,7 @@ import { useAppSelector } from '../../../../app/hooks';
 import { Iday } from '../../../../types/day';
 import { Day } from './day/Day';
 import { WeekMonth } from './week/Week';
+
 import style from './month.module.scss';
 
 const allCountDays = 35;
@@ -51,20 +52,33 @@ export const Month = () => {
 
     if (allCountDays - daysOfMonth.length && daysOfMonth.length > 0) {
       const nextMonth = currentDate.clone().add(1, 'month');
+      const nameDay = daysOfMonth[daysOfMonth.length - 1].date.format('dddd');
+      const countDay = daysOfMonth[daysOfMonth.length - 1].value;
       const count = allCountDays - daysOfMonth.length;
 
-      for (let i = 1; i <= count; i++) {
-        const dayOfMonth = nextMonth.clone().date(i);
-        result.push({
-          date: dayOfMonth,
-          value: dayOfMonth.date(),
-          type: 'other',
-        });
+      if (nameDay === 'Monday' && countDay === 31) {
+        for (let i = 1; i <= 6; i++) {
+          const dayOfMonth = nextMonth.clone().date(i);
+          result.push({
+            date: dayOfMonth,
+            value: dayOfMonth.date(),
+            type: 'other',
+          });
+        }
+      } else {
+        for (let i = 1; i <= count; i++) {
+          const dayOfMonth = nextMonth.clone().date(i);
+          result.push({
+            date: dayOfMonth,
+            value: dayOfMonth.date(),
+            type: 'other',
+          });
+        }
       }
     }
 
     return result;
-  }, [currentDate, daysOfMonth.length]);
+  }, [currentDate, daysOfMonth]);
 
   useEffect(() => {
     if (current !== currentDate.format('DD-MM-YYYY')) {
@@ -80,13 +94,20 @@ export const Month = () => {
   }, [days.length, daysOfMonth, otherMonthDays]);
 
   return (
-    <div>
-      <WeekMonth />
-      <div className={style.wrapper}>
-        {days.map((el: Iday) => (
-          <Day day={el} />
-        ))}
+    <>
+      <div>
+        <WeekMonth />
+        <div className={style.wrapper}>
+          {days.map((el: Iday) => (
+            <Day
+              day={el}
+              key={Math.random() * (9999 - 1) + 1}
+              last={days[days.length - 1] === el}
+              preliminary={days[days.length - 7] === el}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

@@ -180,3 +180,11 @@
     color: $text;
   }
 }
+
+.active {
+  background-color: $dividers !important;
+}
+
+.current {
+  background-color: $dividers !important;
+}

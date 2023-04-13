@@ -4,9 +4,12 @@ import {
   changeDate,
   clearListDates,
 } from '../../features/smallCalendar/smallCalendarSlice';
+import { chooseTypeCalndar } from '../../features/mainCalendar/mainCalendar';
+
 import left from '../../public/images/icons/arrowLeft.png';
 import right from '../../public/images/icons/arrowRight.png';
 import style from './header.module.scss';
+import classNames from 'classnames';
 
 type Props = {
   next: () => void;
@@ -19,6 +22,9 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
   );
   const listDate = useAppSelector(
     (state) => state.smallCalendar.listChooseDates
+  );
+  const typeCalendar = useAppSelector(
+    (state) => state.mainCalendar.typeCalendar
   );
   const dispatch = useAppDispatch();
 
@@ -52,6 +58,10 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
     dispatch(changeDate(moment().toISOString()));
   };
 
+  const chooseTypeCalendar = (type: 'day' | 'week' | 'month') => {
+    dispatch(chooseTypeCalndar(type));
+  };
+
   return (
     <header className={style.header}>
       <div className={style.info}>
@@ -75,13 +85,41 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
         </div>
       </div>
       <div className={style.days}>
-        <button className={style.today} onClick={setToday}>
+        <button
+          className={classNames(style.today, {
+            [style['current']]:
+              moment().format('DD-MM-YYYY') ===
+              moment(currentDate).format('DD-MM-YYYY'),
+          })}
+          onClick={setToday}
+        >
           Today
         </button>
         <div className={style.view_date}>
-          <button className={style.view}>Day</button>
-          <button className={style.view}>Week</button>
-          <button className={style.view}>Month</button>
+          <button
+            className={classNames(style.view, {
+              [style['active']]: typeCalendar === 'day',
+            })}
+            onClick={() => chooseTypeCalendar('day')}
+          >
+            Day
+          </button>
+          <button
+            className={classNames(style.view, {
+              [style['active']]: typeCalendar === 'week',
+            })}
+            onClick={() => chooseTypeCalendar('week')}
+          >
+            Week
+          </button>
+          <button
+            className={classNames(style.view, {
+              [style['active']]: typeCalendar === 'month',
+            })}
+            onClick={() => chooseTypeCalendar('month')}
+          >
+            Month
+          </button>
         </div>
       </div>
       <div className={style.user_info}>

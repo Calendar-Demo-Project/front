@@ -25,11 +25,12 @@ import classNames from 'classnames';
 
 type Props = {
   MyRef: React.RefObject<SliderRef>;
+  nav2: any;
 };
 
 const allCountDays = 35;
 
-export const SmallCalendar = React.forwardRef((props: Props, MyRef) => {
+export const SmallCalendar = React.forwardRef((props: Props, ref) => {
   const [show, setShow] = useState(true);
   const [days, setDays] = useState<Iday[]>([]);
   const [startDay, setStartDay] = useState(false);
@@ -87,20 +88,33 @@ export const SmallCalendar = React.forwardRef((props: Props, MyRef) => {
 
     if (allCountDays - daysOfMonth.length && daysOfMonth.length > 0) {
       const nextMonth = currentDate.clone().add(1, 'month');
+      const nameDay = daysOfMonth[daysOfMonth.length - 1].date.format('dddd');
+      const countDay = daysOfMonth[daysOfMonth.length - 1].value;
       const count = allCountDays - daysOfMonth.length;
 
-      for (let i = 1; i <= count; i++) {
-        const dayOfMonth = nextMonth.clone().date(i);
-        result.push({
-          date: dayOfMonth,
-          value: dayOfMonth.date(),
-          type: 'other',
-        });
+      if (nameDay === 'Monday' && countDay === 31) {
+        for (let i = 1; i <= 6; i++) {
+          const dayOfMonth = nextMonth.clone().date(i);
+          result.push({
+            date: dayOfMonth,
+            value: dayOfMonth.date(),
+            type: 'other',
+          });
+        }
+      } else {
+        for (let i = 1; i <= count; i++) {
+          const dayOfMonth = nextMonth.clone().date(i);
+          result.push({
+            date: dayOfMonth,
+            value: dayOfMonth.date(),
+            type: 'other',
+          });
+        }
       }
     }
 
     return result;
-  }, [currentDate, daysOfMonth.length]);
+  }, [currentDate, daysOfMonth]);
 
   useEffect(() => {
     if (days.length < 1) {
@@ -116,6 +130,7 @@ export const SmallCalendar = React.forwardRef((props: Props, MyRef) => {
     slidesToScroll: 1,
     swipe: false,
     arrows: true,
+    asNavFor: props.nav2,
     nextArrow: (
       <Arrow
         func={() => {
