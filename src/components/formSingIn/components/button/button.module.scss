@@ -1,0 +1,15 @@
+@import '../../../../utils/variables';
+@import '../../../../utils/fonts';
+
+.button {
+  width: 100%;
+  padding: 10px 0;
+  background-color: $primary-default;
+  color: $element;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Aeonik';
+  font-size: 16px;
+  margin-top: 28px;
+  cursor: pointer;
+}
