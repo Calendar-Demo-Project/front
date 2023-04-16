@@ -1,0 +1,50 @@
+@import '../../utils/variables';
+@import '../../utils/fonts';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: calc(540px - 92px);
+  border-radius: 14px;
+  padding: 50px 46px 0 46px;
+  background-color: $element;
+}
+
+.title {
+  font-family: 'Aeonik';
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 24px;
+  margin: 0;
+}
+
+.wrapper_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.have_account {
+  font-family: 'Aeonik';
+  margin-top: 16px;
+  margin-bottom: 41px;
+}
+
+.sing_in {
+  margin-left: 4px;
+  font-family: 'Aeonik';
+  margin-top: 16px;
+  color: $primary-default;
+  text-decoration: none;
+}
+
+.eye {
+  position: absolute;
+  bottom: 40px;
+  right: 11px;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
