@@ -1,11 +1,9 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import Slider from 'react-slick';
 import moment from 'moment';
 import { Week } from './components/week/Week';
 import { Month } from './components/month/Month';
 import rigthArrow from '../../public/images/icons/right-arrow.png';
 import leftArrow from '../../public/images/icons/leftArrow.png';
-import { Arrow } from './components/arrow/Arrow';
 
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
@@ -41,7 +39,6 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     moment(state.smallCalendar.currentDate)
   );
   const [current, setCurrent] = useState(currentDate.format('DD-MM-YYYY'));
-  const selectDate = useAppSelector((state) => state.smallCalendar.selectDate);
   const listDates = useAppSelector(
     (state) => state.smallCalendar.listChooseDates
   );
@@ -149,57 +146,6 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     ) {
       dispatch(clearListDates());
     }
-  };
-
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 400,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    swipe: false,
-    arrows: true,
-    asNavFor: props.nav2,
-    variableWidth: true,
-    nextArrow: (
-      <Arrow
-        func={next}
-        url={rigthArrow}
-        condition={
-          moment(selectDate).format('MM') > moment(currentDate).format('MM')
-        }
-        myStyle={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '28px',
-          height: '28px',
-          position: 'absolute',
-          top: '-50px',
-          left: '230px',
-          cursor: 'pointer',
-        }}
-      />
-    ),
-    prevArrow: (
-      <Arrow
-        func={prev}
-        url={leftArrow}
-        condition={
-          moment(selectDate).format('MM') < moment(currentDate).format('MM')
-        }
-        myStyle={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '28px',
-          height: '28px',
-          position: 'absolute',
-          top: '-50px',
-          left: '190px',
-          cursor: 'pointer',
-        }}
-        type="prev"
-      />
-    ),
   };
 
   useEffect(() => {
