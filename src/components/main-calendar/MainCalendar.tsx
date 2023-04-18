@@ -7,6 +7,8 @@ import style from './mainCalendar.module.scss';
 import React, { useMemo } from 'react';
 import SliderRef from 'react-slick';
 import { useAppSelector } from '../../app/hooks';
+import { Day } from './components/day/Day';
+import { Week } from './components/week/Week';
 
 type Props = {
   MyRef: React.RefObject<SliderRef>;
@@ -21,12 +23,12 @@ export const MainCalendar = React.forwardRef((props: Props, ref) => {
   const settings = {
     dots: false,
     infinite: true,
-    speed: 400,
+    speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    swipe: false,
     arrows: true,
     asNavFor: props.nav1,
+    swipe: false,
   };
 
   const renderCalendars = useMemo(() => {
@@ -34,10 +36,10 @@ export const MainCalendar = React.forwardRef((props: Props, ref) => {
       return <Month />;
     }
     if (typeCalendar === 'day') {
-      return <div>day</div>;
+      return <Day />;
     }
     if (typeCalendar === 'week') {
-      return <div>week</div>;
+      return <Week />;
     }
   }, [typeCalendar]);
 

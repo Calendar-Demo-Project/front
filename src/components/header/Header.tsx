@@ -26,12 +26,15 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
   const typeCalendar = useAppSelector(
     (state) => state.mainCalendar.typeCalendar
   );
+
   const dispatch = useAppDispatch();
 
   const prevDate = () => {
     prev();
     dispatch(
-      changeDate(moment(currentDate).clone().subtract(1, 'month').toISOString())
+      changeDate(
+        moment(currentDate).clone().subtract(1, typeCalendar).toISOString()
+      )
     );
     if (
       +moment(currentDate).format('MM') - +moment(listDate[0]).format('MM') ===
@@ -44,7 +47,7 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
   const nextDate = () => {
     next();
     dispatch(
-      changeDate(moment(currentDate).clone().add(1, 'month').toISOString())
+      changeDate(moment(currentDate).clone().add(1, typeCalendar).toISOString())
     );
     if (
       +moment(currentDate).format('MM') - +moment(listDate[0]).format('MM') ===

@@ -26,6 +26,8 @@ import classNames from 'classnames';
 type Props = {
   MyRef: React.RefObject<SliderRef>;
   nav2: any;
+  next: () => void;
+  prev: () => void;
 };
 
 const allCountDays = 35;
@@ -42,6 +44,9 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
   const selectDate = useAppSelector((state) => state.smallCalendar.selectDate);
   const listDates = useAppSelector(
     (state) => state.smallCalendar.listChooseDates
+  );
+  const typeCalendar = useAppSelector(
+    (state) => state.mainCalendar.typeCalendar
   );
   const dispatch = useAppDispatch();
 
@@ -66,7 +71,9 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
 
     const lastDaysOfPreviousMonth = [];
 
-    for (let i = 0; i < firstDayOfMonth.day() - 1; i++) {
+    const count = firstDayOfMonth.day() === 0 ? 7 : firstDayOfMonth.day();
+
+    for (let i = 0; i < count - 1; i++) {
       lastDaysOfPreviousMonth.push({
         date: lastDayOfPreviousMonth.clone().subtract(i, 'day'),
         value: lastDayOfPreviousMonth.clone().subtract(i, 'day').date(),
@@ -74,10 +81,8 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
       });
     }
 
-    if (firstDayOfMonth.day()) {
-      for (let i = 0; i < lastDaysOfPreviousMonth.reverse().length; i++) {
-        result.unshift(lastDaysOfPreviousMonth.reverse()[i]);
-      }
+    for (let i = 0; i < lastDaysOfPreviousMonth.reverse().length; i++) {
+      result.unshift(lastDaysOfPreviousMonth.reverse()[i]);
     }
 
     return result;
@@ -88,28 +93,16 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
 
     if (allCountDays - daysOfMonth.length && daysOfMonth.length > 0) {
       const nextMonth = currentDate.clone().add(1, 'month');
-      const nameDay = daysOfMonth[daysOfMonth.length - 1].date.format('dddd');
-      const countDay = daysOfMonth[daysOfMonth.length - 1].value;
-      const count = allCountDays - daysOfMonth.length;
+      const lastDayOfMonth = currentDate.clone().endOf('month');
+      const lastDayOfWeek = lastDayOfMonth.day();
 
-      if (nameDay === 'Monday' && countDay === 31) {
-        for (let i = 1; i <= 6; i++) {
-          const dayOfMonth = nextMonth.clone().date(i);
-          result.push({
-            date: dayOfMonth,
-            value: dayOfMonth.date(),
-            type: 'other',
-          });
-        }
-      } else {
-        for (let i = 1; i <= count; i++) {
-          const dayOfMonth = nextMonth.clone().date(i);
-          result.push({
-            date: dayOfMonth,
-            value: dayOfMonth.date(),
-            type: 'other',
-          });
-        }
+      for (let i = 1; i <= 7 - lastDayOfWeek; i++) {
+        const dayOfMonth = nextMonth.clone().date(i);
+        result.push({
+          date: dayOfMonth,
+          value: dayOfMonth.date(),
+          type: 'other',
+        });
       }
     }
 
@@ -122,6 +115,42 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     }
   }, [days.length, daysOfMonth, otherMonthDays]);
 
+  const next = () => {
+    console.log(1);
+    if (typeCalendar !== 'month') {
+      props.prev();
+    }
+    dispatch(
+      changeDate(moment(currentDate).clone().add(1, typeCalendar).toISOString())
+    );
+    typeCalendar === 'month' && setShow(false);
+    if (
+      +moment(currentDate).format('MM') - +moment(listDates[0]).format('MM') ===
+      1
+    ) {
+      dispatch(clearListDates());
+    }
+  };
+
+  const prev = () => {
+    if (typeCalendar !== 'month') {
+      props.next();
+    }
+    console.log(currentDate.format('DD-MM-YYYY'));
+    dispatch(
+      changeDate(
+        moment(currentDate).clone().subtract(1, typeCalendar).toISOString()
+      )
+    );
+    typeCalendar === 'month' && setShow(false);
+    if (
+      +moment(currentDate).format('MM') - +moment(listDates[0]).format('MM') ===
+      -1
+    ) {
+      dispatch(clearListDates());
+    }
+  };
+
   const settings = {
     dots: false,
     infinite: true,
@@ -131,23 +160,10 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     swipe: false,
     arrows: true,
     asNavFor: props.nav2,
+    variableWidth: true,
     nextArrow: (
       <Arrow
-        func={() => {
-          dispatch(
-            changeDate(
-              moment(currentDate).clone().add(1, 'month').toISOString()
-            )
-          );
-          setShow(false);
-          if (
-            +moment(currentDate).format('MM') -
-              +moment(listDates[0]).format('MM') ===
-            1
-          ) {
-            dispatch(clearListDates());
-          }
-        }}
+        func={next}
         url={rigthArrow}
         condition={
           moment(selectDate).format('MM') > moment(currentDate).format('MM')
@@ -166,21 +182,7 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     ),
     prevArrow: (
       <Arrow
-        func={() => {
-          dispatch(
-            changeDate(
-              moment(currentDate).clone().subtract(1, 'month').toISOString()
-            )
-          );
-          setShow(false);
-          if (
-            +moment(currentDate).format('MM') -
-              +moment(listDates[0]).format('MM') ===
-            -1
-          ) {
-            dispatch(clearListDates());
-          }
-        }}
+        func={prev}
         url={leftArrow}
         condition={
           moment(selectDate).format('MM') < moment(currentDate).format('MM')
@@ -259,10 +261,21 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     [listDates]
   );
 
+  useEffect(() => {
+    if (typeCalendar !== 'month' && listDates.length) {
+      if (currentDate !== moment(listDates[0])) {
+        dispatch(changeDate(listDates[0]));
+      }
+    }
+    // this put currentDate you can't because day won't change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, listDates, typeCalendar]);
+
   const initialStartDate = useCallback(
     (day: Iday) => {
       dispatch(chooseStartDate(day.date.toISOString()));
       if (day.date.format('YYYY') !== currentDate.format('YYYY')) {
+        console.log(3);
         dispatch(changeDate(day.date.toISOString()));
       }
     },
@@ -338,13 +351,37 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
       <div
         className={classNames(style.day, {
           [style['no_current']]: day.type === 'other',
+          [style['current_day']]:
+            (moment(currentDate).format('DD-MM-YYYY') ===
+              day.date.format('DD-MM-YYYY') &&
+              typeCalendar === 'day') ||
+            (moment(currentDate)
+              .startOf('isoWeek')
+              .startOf('day')
+              .format('DD-MM-YYYY') === day.date.format('DD-MM-YYYY') &&
+              typeCalendar === 'week'),
           [style['today']]: checkToday(day) && show,
-          [style['several_date']]: checkSelectedDay(day) && show,
-          [style['start-selected']]: checkStartSelectDate(day) && show,
-          [style['end-selected']]: checkEndSelectedDay(day) && show,
+          [style['several_date']]:
+            checkSelectedDay(day) && show && typeCalendar === 'month',
+          [style['start-selected']]:
+            checkStartSelectDate(day) && show && typeCalendar === 'month',
+          [style['end-selected']]:
+            checkEndSelectedDay(day) && show && typeCalendar === 'month',
         })}
         key={day.date.valueOf()}
-        onClick={() => initialStartDate(day)}
+        onClick={() => {
+          if (typeCalendar !== 'month') {
+            if (day.date.isBefore(moment(currentDate), 'day')) {
+              props.prev();
+            } else {
+              props.next();
+            }
+            console.log(4);
+            dispatch(changeDate(day.date.toISOString()));
+          } else {
+            initialStartDate(day);
+          }
+        }}
         onMouseDown={() => handlerMouseDown(day)}
         onMouseOver={() => handlerOnMouseOver(day, isMouseDown)}
       >
@@ -355,12 +392,16 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
     checkEndSelectedDay,
     checkSelectedDay,
     checkStartSelectDate,
+    currentDate,
     days,
+    dispatch,
     handlerMouseDown,
     handlerOnMouseOver,
     initialStartDate,
     isMouseDown,
+    props,
     show,
+    typeCalendar,
   ]);
 
   return (
@@ -374,8 +415,40 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
         </div>
       </div>
       <div className={style.wrapper_slider}>
-        <Slider {...settings} ref={props.MyRef}>
-          <div>
+        <div style={{ position: 'relative' }}>
+          <div
+            className={style.prev}
+            onClick={() => {
+              prev();
+              props.prev();
+            }}
+          >
+            <img src={leftArrow} alt="arrow" />
+          </div>
+          <div
+            className={style.next}
+            onClick={() => {
+              next();
+              props.next();
+            }}
+          >
+            <img src={rigthArrow} alt="arrow" />
+          </div>
+          <Week />
+          <Month
+            children={renderDays}
+            handlerOnMouseUp={handlerOnMouseUp}
+            handleOnMouseLeave={handleOnMouseLeave}
+          />
+        </div>
+        {/* <Slider {...settings} ref={props.MyRef}>
+          <div style={{ position: 'relative' }}>
+            <div className={style.prev} onClick={prev}>
+              <img src={leftArrow} alt="arrow" />
+            </div>
+            <div className={style.next} onClick={next}>
+              <img src={rigthArrow} alt="arrow" />
+            </div>
             <Week />
             <Month
               children={renderDays}
@@ -384,14 +457,14 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
             />
           </div>
           <div>
-            <Week />
-            <Month
-              children={renderDays}
-              handlerOnMouseUp={handlerOnMouseUp}
-              handleOnMouseLeave={handleOnMouseLeave}
-            />
-          </div>
-        </Slider>
+              <Week />
+              <Month
+                children={renderDays}
+                handlerOnMouseUp={handlerOnMouseUp}
+                handleOnMouseLeave={handleOnMouseLeave}
+              />
+            </div>
+        </Slider> */}
       </div>
     </div>
   );

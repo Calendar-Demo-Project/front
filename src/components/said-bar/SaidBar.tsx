@@ -9,6 +9,8 @@ import style from './saidBar.module.scss';
 type Props = {
   MyRef: React.RefObject<SliderRef>;
   nav2: any;
+  next: () => void;
+  prev: () => void;
 };
 
 export const SaidBar = React.forwardRef((props: Props, ref) => {
@@ -18,7 +20,12 @@ export const SaidBar = React.forwardRef((props: Props, ref) => {
 
   return (
     <div className={style.wrapper}>
-      <SmallCalendar MyRef={props.MyRef} nav2={props.nav2} />
+      <SmallCalendar
+        MyRef={props.MyRef}
+        nav2={props.nav2}
+        next={props.next}
+        prev={props.prev}
+      />
       <div>
         <Acardion title="Tasks" list={tasks} />
         <Acardion title="Events" list={events} />
