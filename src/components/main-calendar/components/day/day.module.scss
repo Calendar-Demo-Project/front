@@ -1,0 +1,103 @@
+@import '../../../../utils/variables';
+@import '../../../../utils/fonts';
+
+.wrapper {
+  max-height: 920px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  border-radius: 14px;
+  border: 1px solid $dividers;
+
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: transparent !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent !important;
+  }
+}
+
+.day_info {
+  display: flex;
+}
+
+.timezone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Aeonik';
+  font-size: 12px;
+  color: $text;
+  border: none;
+  width: 87px;
+  height: 85px;
+}
+
+.count_day {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid $dividers;
+  border-top: none;
+  border-bottom: none;
+  width: calc(100% - 50px);
+  padding-left: 50px;
+}
+
+.name_day {
+  font-size: 14px;
+  font-family: 'Aeonik';
+  color: $text;
+  text-transform: uppercase;
+}
+
+.number_day {
+  font-size: 16px;
+  font-family: 'Aeonik';
+  color: $title;
+  margin-top: 8px;
+  margin-left: 5px;
+}
+
+.wrapper_hours {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.count_hours {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid $dividers;
+  border-left: none;
+  border-bottom: none;
+  width: fit-content;
+}
+
+.hour {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  width: 80px;
+  font-family: 'Aeonik';
+  color: $text;
+  font-size: 12px;
+}
+
+.time_fields {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.time {
+  height: 69px;
+  width: 100%;
+  border-top: 1px solid $dividers;
+}

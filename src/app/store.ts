@@ -1,11 +1,13 @@
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import { smallCalendarReducer } from '../features/smallCalendar/smallCalendarSlice';
 import { TECmanagerReducer } from '../features/tecManager/tecManager';
+import { mainCalendarReducer } from '../features/mainCalendar/mainCalendar';
 
 export const store = configureStore({
   reducer: {
     smallCalendar: smallCalendarReducer,
     TECManager: TECmanagerReducer,
+    mainCalendar: mainCalendarReducer,
   },
 });
 

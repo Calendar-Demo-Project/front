@@ -29,11 +29,13 @@ export const Acardion: React.FC<Props> = ({ title, list }) => {
 
   return (
     <div className={style.acardion}>
-      <div className={style.title} onClick={showContent}>
+      <div className={style.title}>
         <h3>{title}</h3>
+        {active && <Button />}
         <img
           src={arrow}
           alt="arrow"
+          onClick={showContent}
           className={classNames(style.default, {
             [style['down']]: active,
           })}
@@ -56,7 +58,6 @@ export const Acardion: React.FC<Props> = ({ title, list }) => {
               />
             );
           })}
-        <Button text={title} />
       </div>
     </div>
   );

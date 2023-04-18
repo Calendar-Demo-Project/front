@@ -3,7 +3,34 @@
 .day {
   text-align: center;
   width: 154px;
-  height: 182px;
+  height: 154px;
   border: 1px solid $dividers;
   padding-top: 16px;
+}
+
+.last {
+  border-bottom-right-radius: 14px;
+}
+
+.preliminary {
+  border-bottom-left-radius: 14px;
+}
+
+.date {
+  display: inline-block;
+  padding: 4px 0;
+}
+
+.selected {
+  width: 100%;
+  background-color: $secondary-default;
+}
+
+.today {
+  position: relative;
+  color: $element;
+  padding: 6px;
+  width: fit-content;
+  border-radius: 50%;
+  background-color: $primary-default;
 }
