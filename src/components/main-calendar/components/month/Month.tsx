@@ -30,7 +30,9 @@ export const Month = () => {
 
     const lastDaysOfPreviousMonth = [];
 
-    for (let i = 0; i < firstDayOfMonth.day() - 1; i++) {
+    const count = firstDayOfMonth.day() === 0 ? 7 : firstDayOfMonth.day();
+
+    for (let i = 0; i < count - 1; i++) {
       lastDaysOfPreviousMonth.push({
         date: lastDayOfPreviousMonth.clone().subtract(i, 'day'),
         value: lastDayOfPreviousMonth.clone().subtract(i, 'day').date(),
@@ -38,10 +40,8 @@ export const Month = () => {
       });
     }
 
-    if (firstDayOfMonth.day()) {
-      for (let i = 0; i < lastDaysOfPreviousMonth.reverse().length; i++) {
-        result.unshift(lastDaysOfPreviousMonth.reverse()[i]);
-      }
+    for (let i = 0; i < lastDaysOfPreviousMonth.reverse().length; i++) {
+      result.unshift(lastDaysOfPreviousMonth.reverse()[i]);
     }
 
     return result;
@@ -52,28 +52,16 @@ export const Month = () => {
 
     if (allCountDays - daysOfMonth.length && daysOfMonth.length > 0) {
       const nextMonth = currentDate.clone().add(1, 'month');
-      const nameDay = daysOfMonth[daysOfMonth.length - 1].date.format('dddd');
-      const countDay = daysOfMonth[daysOfMonth.length - 1].value;
-      const count = allCountDays - daysOfMonth.length;
+      const lastDayOfMonth = currentDate.clone().endOf('month');
+      const lastDayOfWeek = lastDayOfMonth.day();
 
-      if (nameDay === 'Monday' && countDay === 31) {
-        for (let i = 1; i <= 6; i++) {
-          const dayOfMonth = nextMonth.clone().date(i);
-          result.push({
-            date: dayOfMonth,
-            value: dayOfMonth.date(),
-            type: 'other',
-          });
-        }
-      } else {
-        for (let i = 1; i <= count; i++) {
-          const dayOfMonth = nextMonth.clone().date(i);
-          result.push({
-            date: dayOfMonth,
-            value: dayOfMonth.date(),
-            type: 'other',
-          });
-        }
+      for (let i = 1; i <= 7 - lastDayOfWeek; i++) {
+        const dayOfMonth = nextMonth.clone().date(i);
+        result.push({
+          date: dayOfMonth,
+          value: dayOfMonth.date(),
+          type: 'other',
+        });
       }
     }
 
