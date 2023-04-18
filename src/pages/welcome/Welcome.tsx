@@ -1,28 +1,11 @@
-import { Link, useLocation } from 'react-router-dom';
-import { FormSingIn } from '../../components/formSingIn/FormSingIn';
-import { FormSingUp } from '../../components/formSingUp/FormSingUp';
+import { Link } from 'react-router-dom';
 import star from '../../public/images/icons/Star.png';
 import calendar from '../../public/images/photo/calendar.png';
 import style from './welcome.module.scss';
 
 export const Welcome = () => {
-  const location = useLocation().search;
-
   return (
     <>
-      {location && (
-        <div className={style.background}>
-          {location.includes('sing_in') && (
-            <FormSingIn type={'enter'} title={'Sign In to your Account'} />
-          )}
-          {location.includes('forgot_password') && (
-            <FormSingIn type="restore" title="Restore password" />
-          )}
-          {location.includes('sing_up') && (
-            <FormSingUp title="Create your Account" />
-          )}
-        </div>
-      )}
       <div className={style.wrapper}>
         <header className={style.header}>
           <h2 className={style.logo}>Day.Master</h2>
