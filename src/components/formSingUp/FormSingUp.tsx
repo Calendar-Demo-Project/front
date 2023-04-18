@@ -6,6 +6,12 @@ import eyeOpen from '../../public/images/icons/openEye.png';
 import eyeClose from '../../public/images/icons/EyeClosed.png';
 import style from './formSingUp.module.scss';
 import { Button } from './button/Button';
+import {
+  isValidConfirmPassword,
+  isValidEmail,
+  isValidName,
+  isValidPassword,
+} from '../../utils/validate';
 
 type Props = {
   title: string;
@@ -13,9 +19,13 @@ type Props = {
 
 export const FormSingUp: React.FC<Props> = ({ title }) => {
   const [name, setName] = useState('');
+  const [errorName, setErrorName] = useState('');
   const [email, setEmail] = useState('');
+  const [errorEmail, setErrorEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [errorConfirmPassword, setErrorConfirmPassword] = useState('');
   const [openPassword, setOpenPassword] = useState(false);
   const [confirmPasswordOpen, setConfirmPasswordOpen] = useState(false);
   const [validationObj, setValidationObj] = useState({
@@ -25,104 +35,47 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
     confirmPassword: false,
   });
 
-  const isValidName = (value: string, func: (value?: string) => void) => {
-    if (value.length < 3 || value.length > 40) {
-      setValidationObj({
-        ...validationObj,
-        name: false,
-      });
-      return func('Min 3 symbols and max 40 symbols');
-    }
-    if (!/^[A-Za-z0-9]+$/.test(value)) {
-      return func('Allow only latin and digits');
-    }
-    setValidationObj({
-      ...validationObj,
-      name: true,
-    });
-    return func('');
-  };
-
-  const isValidEmail = (value: string, func: (value?: string) => void) => {
-    if (!value.length || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-      setValidationObj({
-        ...validationObj,
-        email: false,
-      });
-      return func('Not valid email');
-    }
-    setValidationObj({
-      ...validationObj,
-      email: true,
-    });
-    return func('');
-  };
-
-  const isValidPassword = (value: string, func: (value?: string) => void) => {
-    if (!/^(?=.*\d)(?=.*[A-Z])(?=.*[!@#$%^&*])(?!.*\s).{8,30}$/.test(value)) {
-      setValidationObj({
-        ...validationObj,
-        password: false,
-      });
-      return func(
-        'Password should contain one digit one special character and capital letter'
-      );
-    }
-    setValidationObj({
-      ...validationObj,
-      password: true,
-    });
-    return func('');
-  };
-
-  const isValidConfirmPassword = (
-    value: string,
-    func: (value?: string) => void
-  ) => {
-    if (value !== password) {
-      setValidationObj({
-        ...validationObj,
-        confirmPassword: false,
-      });
-      return func('Passwords must match');
-    }
-    setValidationObj({
-      ...validationObj,
-      confirmPassword: true,
-    });
-    return func('');
-  };
-
-  const onChangeName = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    func: (value?: string) => void
-  ) => {
+  const onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
-    isValidName(event.target.value, func);
+    isValidName(
+      event.target.value,
+      setErrorName,
+      setValidationObj,
+      validationObj
+    );
   };
 
-  const onChangeEmail = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    func: (value?: string) => void
-  ) => {
+  const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-    isValidEmail(event.target.value, func);
+    isValidEmail(
+      event.target.value,
+      setErrorEmail,
+      setValidationObj,
+      validationObj
+    );
   };
 
-  const onChangePassword = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    func: (value?: string) => void
-  ) => {
+  const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-    isValidPassword(event.target.value, func);
+    isValidPassword(
+      event.target.value,
+      setErrorPassword,
+      setValidationObj,
+      validationObj
+    );
   };
 
   const onChangeConfirmPassword = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    func: (value?: string) => void
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setConfirmPassword(event.target.value);
-    isValidConfirmPassword(event.target.value, func);
+    isValidConfirmPassword(
+      event.target.value,
+      setErrorConfirmPassword,
+      setValidationObj,
+      validationObj,
+      password
+    );
   };
 
   const openPasswordHandler = () => {
@@ -133,8 +86,33 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
     setConfirmPasswordOpen(!confirmPasswordOpen);
   };
 
+  const registerUser = () => {
+    if (Object.values(validationObj).every((el) => el === true)) {
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+    } else {
+      isValidName(name, setErrorName, setValidationObj, validationObj);
+      isValidEmail(email, setErrorEmail, setValidationObj, validationObj);
+      isValidPassword(
+        password,
+        setErrorPassword,
+        setValidationObj,
+        validationObj
+      );
+      isValidConfirmPassword(
+        confirmPassword,
+        setErrorConfirmPassword,
+        setValidationObj,
+        validationObj,
+        password
+      );
+    }
+  };
+
   return (
-    <div className={style.wrapper}>
+    <form className={style.wrapper}>
       <div className={style.wrapper_title}>
         <h3 className={style.title}>{title}</h3>
         <Link to="/">
@@ -147,6 +125,13 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
         title="Enter name"
         type={'text'}
         placeholder={'John Doe'}
+        setObjValid={() =>
+          setValidationObj({
+            ...validationObj,
+            name: false,
+          })
+        }
+        error={errorName}
       />
       <Field
         value={email}
@@ -154,6 +139,13 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
         title="Enter email"
         type={'email'}
         placeholder={'account@example.com'}
+        setObjValid={() =>
+          setValidationObj({
+            ...validationObj,
+            email: false,
+          })
+        }
+        error={errorEmail}
       />
       <Field
         value={password}
@@ -161,6 +153,13 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
         title="Enter password"
         type={!openPassword ? 'password' : 'text'}
         placeholder={'Password'}
+        setObjValid={() =>
+          setValidationObj({
+            ...validationObj,
+            password: false,
+          })
+        }
+        error={errorPassword}
       >
         <img
           src={openPassword ? eyeOpen : eyeClose}
@@ -175,6 +174,13 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
         title="Confirm password"
         type={!confirmPasswordOpen ? 'password' : 'text'}
         placeholder={'Password'}
+        setObjValid={() =>
+          setValidationObj({
+            ...validationObj,
+            confirmPassword: false,
+          })
+        }
+        error={errorConfirmPassword}
       >
         <img
           src={confirmPasswordOpen ? eyeOpen : eyeClose}
@@ -183,13 +189,13 @@ export const FormSingUp: React.FC<Props> = ({ title }) => {
           onClick={openConfirmPasswordHandler}
         />
       </Field>
-      <Button text="Sing Up" func={() => {}} />
+      <Button text="Sing Up" func={registerUser} />
       <div className={style.have_account}>
         Already have no account?
         <Link to="/?sing_in" className={style.sing_in}>
           Sing in
         </Link>
       </div>
-    </div>
+    </form>
   );
 };
