@@ -10,6 +10,7 @@ import left from '../../public/images/icons/arrowLeft.png';
 import right from '../../public/images/icons/arrowRight.png';
 import style from './header.module.scss';
 import classNames from 'classnames';
+import { activeDragTask } from '../../features/tecManager/tecManager';
 
 type Props = {
   next: () => void;
@@ -36,6 +37,7 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
         moment(currentDate).clone().subtract(1, typeCalendar).toISOString()
       )
     );
+    dispatch(activeDragTask(''));
     if (
       +moment(currentDate).format('MM') - +moment(listDate[0]).format('MM') ===
       -1
@@ -49,6 +51,7 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
     dispatch(
       changeDate(moment(currentDate).clone().add(1, typeCalendar).toISOString())
     );
+    dispatch(activeDragTask(''));
     if (
       +moment(currentDate).format('MM') - +moment(listDate[0]).format('MM') ===
       1
@@ -59,6 +62,7 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
 
   const setToday = () => {
     dispatch(changeDate(moment().toISOString()));
+    dispatch(activeDragTask(''));
   };
 
   const chooseTypeCalendar = (type: 'day' | 'week' | 'month') => {
@@ -103,7 +107,10 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
             className={classNames(style.view, {
               [style['active']]: typeCalendar === 'day',
             })}
-            onClick={() => chooseTypeCalendar('day')}
+            onClick={() => {
+              chooseTypeCalendar('day');
+              dispatch(activeDragTask(''));
+            }}
           >
             Day
           </button>
@@ -111,7 +118,10 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
             className={classNames(style.view, {
               [style['active']]: typeCalendar === 'week',
             })}
-            onClick={() => chooseTypeCalendar('week')}
+            onClick={() => {
+              dispatch(activeDragTask(''));
+              chooseTypeCalendar('week');
+            }}
           >
             Week
           </button>
@@ -119,7 +129,10 @@ export const Header: React.FC<Props> = ({ next, prev }) => {
             className={classNames(style.view, {
               [style['active']]: typeCalendar === 'month',
             })}
-            onClick={() => chooseTypeCalendar('month')}
+            onClick={() => {
+              chooseTypeCalendar('week');
+              chooseTypeCalendar('month');
+            }}
           >
             Month
           </button>

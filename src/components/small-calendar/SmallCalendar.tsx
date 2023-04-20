@@ -20,6 +20,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import React from 'react';
 import { Iday } from '../../types/day';
 import classNames from 'classnames';
+import { activeDragTask } from '../../features/tecManager/tecManager';
 
 type Props = {
   MyRef: React.RefObject<SliderRef>;
@@ -322,7 +323,6 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
             } else {
               props.next();
             }
-            console.log(4);
             dispatch(changeDate(day.date.toISOString()));
           } else {
             initialStartDate(day);
@@ -367,6 +367,7 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
             onClick={() => {
               prev();
               props.prev();
+              dispatch(activeDragTask(''));
             }}
           >
             <img src={leftArrow} alt="arrow" />
@@ -376,6 +377,7 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
             onClick={() => {
               next();
               props.next();
+              dispatch(activeDragTask(''));
             }}
           >
             <img src={rigthArrow} alt="arrow" />
@@ -387,30 +389,6 @@ export const SmallCalendar = React.forwardRef((props: Props, ref) => {
             handleOnMouseLeave={handleOnMouseLeave}
           />
         </div>
-        {/* <Slider {...settings} ref={props.MyRef}>
-          <div style={{ position: 'relative' }}>
-            <div className={style.prev} onClick={prev}>
-              <img src={leftArrow} alt="arrow" />
-            </div>
-            <div className={style.next} onClick={next}>
-              <img src={rigthArrow} alt="arrow" />
-            </div>
-            <Week />
-            <Month
-              children={renderDays}
-              handlerOnMouseUp={handlerOnMouseUp}
-              handleOnMouseLeave={handleOnMouseLeave}
-            />
-          </div>
-          <div>
-              <Week />
-              <Month
-                children={renderDays}
-                handlerOnMouseUp={handlerOnMouseUp}
-                handleOnMouseLeave={handleOnMouseLeave}
-              />
-            </div>
-        </Slider> */}
       </div>
     </div>
   );

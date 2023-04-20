@@ -1,16 +1,48 @@
 import moment from 'moment';
-import { useMemo } from 'react';
-import { useAppSelector } from '../../../../app/hooks';
+import { useCallback, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../../../app/hooks';
+import { useDrop } from 'react-dnd';
 import style from './week.module.scss';
+import { DraggableBox } from '../../../task/Task';
+import { activeDragTask } from '../../../../features/tecManager/tecManager';
 
 export const Week = () => {
   const currentDay = useAppSelector((state) => state.smallCalendar.currentDate);
   const offset = 3;
   const timezone = moment().utcOffset(offset).format('ZZ');
+  const dragTask = useAppSelector((state) => state.TECManager.dragTask);
+  const dispatch = useAppDispatch();
   const days = [];
   const startOfWeek = moment(currentDay).startOf('week');
+  const [postionElement, setPosition] = useState({ x: 90, y: 0 });
+  const dropRef = useRef<any>(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const hoursOfDay: string[] = [];
+
+  const handleDrop = useCallback((item: any, monitor: any) => {
+    if (dropRef.current) {
+      const parentRect = dropRef.current.getBoundingClientRect();
+      if (monitor.getClientOffset().y - parentRect.top + 60 < 85) {
+        setPosition({
+          x: 0,
+          y: 0,
+        });
+      } else {
+        setPosition({
+          x: monitor.getClientOffset().y - parentRect.top + 60,
+          y: 0,
+        });
+      }
+    }
+  }, []);
+
+  const [, drop] = useDrop(() => ({
+    accept: 'box',
+    drop: handleDrop,
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }));
 
   for (let i = 0; i < 24; i++) {
     const hour = moment().utcOffset(0).hour(i);
@@ -23,15 +55,62 @@ export const Week = () => {
     days.push(day);
   }
 
-  const renderHours = useMemo(() => {
-    return (
-      <div className={style.time_fields}>
-        {hoursOfDay.map((el: string) => {
-          return <div className={style.time} key={el}></div>;
-        })}
-      </div>
-    );
-  }, [hoursOfDay]);
+  const renderHours = useCallback(
+    (day: moment.Moment, key: string) => {
+      const chooseDay = (day: moment.Moment) => {
+        dispatch(activeDragTask(day.toISOString()));
+      };
+
+      function handleClick(event: React.MouseEvent<any>, day: moment.Moment) {
+        if (dragTask !== day.toISOString()) {
+          const rect = dropRef.current.getBoundingClientRect();
+          const y = event.clientY - rect.top;
+          setPosition({
+            x: y + 85,
+            y: 0,
+          });
+        }
+
+        if (
+          dragTask === day.toISOString() &&
+          Array.from((event.target as HTMLElement).classList)[0].includes(
+            'week'
+          )
+        ) {
+          dispatch(activeDragTask(''));
+        } else {
+          dispatch(activeDragTask(day.toISOString()));
+        }
+      }
+      return (
+        <div
+          className={style.time_fields}
+          ref={dropRef}
+          onClick={(event) => handleClick(event, day)}
+          key={key}
+        >
+          {dragTask === day.toISOString() && (
+            <DraggableBox
+              positionX={postionElement.x}
+              positionY={postionElement.y}
+              heigth={60}
+              type="week"
+            />
+          )}
+          {hoursOfDay.map((el: string) => {
+            return (
+              <div
+                className={style.time}
+                key={el}
+                onClick={() => chooseDay(day)}
+              ></div>
+            );
+          })}
+        </div>
+      );
+    },
+    [dispatch, dragTask, hoursOfDay, postionElement.x, postionElement.y]
+  );
 
   return (
     <div className={style.wrapper}>
@@ -56,14 +135,8 @@ export const Week = () => {
             );
           })}
         </div>
-        <div className={style.hours}>
-          {renderHours}
-          {renderHours}
-          {renderHours}
-          {renderHours}
-          {renderHours}
-          {renderHours}
-          {renderHours}
+        <div className={style.hours} ref={drop}>
+          {days.map((el) => renderHours(el, el.toISOString()))}
         </div>
       </div>
     </div>
