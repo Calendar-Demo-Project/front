@@ -9,6 +9,7 @@ type Props = {
   positionX: number;
   heigth: number;
   type: string;
+  parent: null | React.MutableRefObject<any>;
 };
 
 export const DraggableBox: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const DraggableBox: React.FC<Props> = ({
   positionX,
   heigth,
   type,
+  parent,
 }) => {
   const positionForDay =
     Math.ceil((Math.round(positionX / 30) * 30) / 10) * 10 - 4.5;
@@ -44,47 +46,6 @@ export const DraggableBox: React.FC<Props> = ({
     return hours;
   };
 
-  useEffect(() => {
-    const roundedPosition = Math.round((positionX - 85) / 10);
-    const positionForDay = Math.round((roundedPosition * 10) / 30) * 30;
-
-    if (checkminutesToHours(positionForDay) > 24) {
-      setNewPosition(1440 - (heigth - 85));
-    }
-    if (
-      checkminutesToHours(
-        (type === 'day' ? positionForDay : positionForWeek) + heigth
-      ) < 0
-    ) {
-      setNewPosition(0);
-    }
-    if (positionForWeek > 1380) {
-      setNewPosition(1440 - 59);
-    }
-  }, [heigth, newPositon, positionForWeek, positionX, type]);
-
-  function minutesToHoursAndMinutes(minutes: number, type?: string) {
-    const hours = Math.floor(minutes / 60);
-    let remainingMinutes = minutes % 60;
-    let formattedHours = hours > 12 ? hours - 12 : hours;
-    const amPm = hours >= 12 ? 'PM' : 'AM';
-    if (formattedHours < 0) {
-      if (type === 'second') {
-        formattedHours = 1;
-      } else {
-        formattedHours = 0;
-      }
-    }
-    if (remainingMinutes < 0) {
-      remainingMinutes = 0;
-    }
-    const formattedTime = `${formattedHours}:${remainingMinutes
-      .toString()
-      .padStart(2, '0')} ${amPm}`;
-
-    return formattedTime;
-  }
-
   const renderTime = useMemo(() => {
     const time = `${minutesToHoursAndMinutes(
       type === 'day'
@@ -99,8 +60,58 @@ export const DraggableBox: React.FC<Props> = ({
     if (time === '11:30 PM - 12:30 PM') {
       return '11:00 PM - 12:00 PM';
     }
+    if (time === '12:00 PM - 13:00 PM') {
+      return '11:00 PM - 12:00 PM';
+    }
     return time;
   }, [heigth, positionX, type]);
+
+  useEffect(() => {
+    const roundedPosition = Math.round((positionX - 85) / 10);
+    const positionForDay = Math.round((roundedPosition * 10) / 30) * 30;
+
+    if (parent) {
+      if (checkminutesToHours(positionForDay) > 24) {
+        setNewPosition(1440 - (heigth - 85));
+      }
+      if (
+        checkminutesToHours(
+          (type === 'day' ? positionForDay : positionForWeek) + heigth
+        ) < 0
+      ) {
+        setNewPosition(0);
+      }
+      if (newPositon > parent.current.offsetHeight + 26 && type === 'day') {
+        setNewPosition(parent.current.offsetHeight + 26);
+      }
+      if (
+        positionForWeek > parent.current.offsetHeight - 61 &&
+        type !== 'day'
+      ) {
+        setNewPosition(parent.current.offsetHeight - 61);
+      }
+    }
+  }, [
+    heigth,
+    newPositon,
+    parent,
+    positionForWeek,
+    positionX,
+    renderTime,
+    type,
+  ]);
+
+  function minutesToHoursAndMinutes(minutes: number, type?: string) {
+    const hours = Math.floor(minutes / 60);
+    let remainingMinutes = minutes % 60;
+    let formattedHours = hours > 12 ? hours - 12 : hours;
+    const amPm = hours >= 12 ? 'PM' : 'AM';
+    const formattedTime = `${formattedHours}:${remainingMinutes
+      .toString()
+      .padStart(2, '0')} ${amPm}`;
+
+    return formattedTime;
+  }
 
   return (
     <div

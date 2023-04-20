@@ -95,6 +95,7 @@ export const Week = () => {
               positionY={postionElement.y}
               heigth={60}
               type="week"
+              parent={dropRef}
             />
           )}
           {hoursOfDay.map((el: string) => {
