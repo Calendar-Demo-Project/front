@@ -71,6 +71,7 @@ export const Day = React.memo(() => {
           positionY={postionElement.y}
           heigth={60}
           type="day"
+          parent={dropRef}
         />
       );
     }
