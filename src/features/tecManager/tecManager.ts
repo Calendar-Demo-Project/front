@@ -1,10 +1,11 @@
-import { createSlice /* PayloadAction */ } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ICategory, IEvent, ITask } from '../../types/elementList';
 
 export interface ITECManager {
   tasksList: ITask[];
   eventsList: IEvent[];
   categories: ICategory[];
+  dragTask: string;
 }
 
 const initialState: ITECManager = {
@@ -48,12 +49,19 @@ const initialState: ITECManager = {
       color: '#377BFF',
     },
   ],
+  dragTask: '',
 };
 
 export const TECManagerSlice = createSlice({
   name: 'TECmanager',
   initialState,
-  reducers: {},
+  reducers: {
+    activeDragTask: (state, action: PayloadAction<string>) => {
+      state.dragTask = action.payload;
+    },
+  },
 });
+
+export const { activeDragTask } = TECManagerSlice.actions;
 
 export const TECmanagerReducer = TECManagerSlice.reducer;

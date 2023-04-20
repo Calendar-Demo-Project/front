@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Header } from '../../components/header/Header';
 import { SaidBar } from '../../components/said-bar/SaidBar';
 import SliderRef from 'react-slick';
@@ -31,11 +31,15 @@ export const Main = () => {
     }
   };
 
+  const renderCalendar = useMemo(() => {
+    return <MainCalendar MyRef={slider2} nav1={nav1} />;
+  }, [nav1]);
+
   return (
     <>
       <Header next={nextSlide} prev={prevSlide} />
       <SaidBar MyRef={slider1} nav2={nav2} next={nextSlide} prev={prevSlide} />
-      <MainCalendar MyRef={slider2} nav1={nav1} />
+      {renderCalendar}
     </>
   );
 };

@@ -1,5 +1,7 @@
 import { Month } from './components/month/Month';
 import Slider from 'react-slick';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -26,7 +28,7 @@ export const MainCalendar = React.forwardRef((props: Props, ref) => {
     speed: 300,
     slidesToShow: 1,
     slidesToScroll: 1,
-    arrows: true,
+    arrows: false,
     asNavFor: props.nav1,
     swipe: false,
   };
@@ -44,11 +46,13 @@ export const MainCalendar = React.forwardRef((props: Props, ref) => {
   }, [typeCalendar]);
 
   return (
-    <div className={style.wrapper}>
-      <Slider {...settings} ref={props.MyRef}>
-        {renderCalendars}
-        {renderCalendars}
-      </Slider>
-    </div>
+    <DndProvider backend={HTML5Backend}>
+      <div className={style.wrapper}>
+        <Slider {...settings} ref={props.MyRef}>
+          {renderCalendars}
+          {renderCalendars}
+        </Slider>
+      </div>
+    </DndProvider>
   );
 });
